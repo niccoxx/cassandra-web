@@ -2,18 +2,17 @@ language: ruby
 #cache: bundler
 
 rvm:
-  - 2.5
-  - 2.6
+- 2.6
 
 before_install:
-    - gem install rails
     - yes | gem update --system --force
     - gem install bundler -v 2.1.4
     - bundle _2.1.4_ install
 
-    
 install:
-  - bundle _2.1.4_ install --jobs=3 --retry=3
+  - bundle _2.1.4_ install
+#install:
+#  - bundle install --jobs=3 --retry=3
 
 script:
   - gem build cassandra-web.gemspec
