@@ -40,7 +40,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  bundler (~> 1.6)
+  bundler (~> 2.0)
   cassandra-web!
   rake (~> 10.0)
 
