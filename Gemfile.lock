@@ -7,7 +7,7 @@ PATH
       rack-cors (~> 0.2)
       rack-parser (~> 0.6)
       sinatra (~> 1.4)
-      thin (~> 1.6)
+      thin (~> 2.0)
 
 GEM
   remote: https://rubygems.org/
