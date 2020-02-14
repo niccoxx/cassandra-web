@@ -2,17 +2,17 @@ language: ruby
 #cache: bundler
 
 rvm:
-- 2.6
+  - 2.5
+  - 2.6
 
 before_install:
+    - gem install rails
     - yes | gem update --system --force
     - gem install bundler -v 2.1.4
     - bundle _2.1.4_ install
 
 install:
-  - bundle _2.1.4_ install
-#install:
-#  - bundle install --jobs=3 --retry=3
+  - bundle _2.1.4_ install --jobs=3 --retry=3
 
 script:
   - gem build cassandra-web.gemspec
@@ -20,7 +20,7 @@ script:
   - docker login --username $DOCKER_HUB_USERNAME --password $DOCKER_HUB_PASSWORD
   - docker push $DOCKER_HUB_IMAGE
 
-env:
+env
   global:
 
   - secure: rHC8IbuTqcV0i01Ua0u7xCy5Yx+8DaZXPNpHScPRTMCRZJQS8Se6E5eLgulXtJLd0G5QGsM3yu7TIEeSlughUAuykf/i2b1BIUDx3swIDa81bAbzkNeTwPRCSDpJ150tsabOO941MZWjLRT9YBm6m6rhLj97Wd3/Rv5SHbRvvQAMxMDQT6ciBNX7/a2p0pzcarSZUF/EziSYV/0mqk6eYioWrpNG+6iBwAom3CgMnLqsj/aDumtOKSPWvIDGtUvG73Mbju3Y6m8EKIAt5UZicHCcY+0VRynvtvq7E42NCg1Z3FoAGmELrL0iubp5jXF/ojmWXA+hdACkutND7dDlTn0gqUpkJoEN8qpDXnMLpemCO2VWYlU09m0Mt3nsHhQjyLX1i6voLWNKY7fTBFiLoYr6IfVuCdE5sFMuCe3MRNXFzOKec5WtWKF7WX2SoNhpJa5bhpqMdCfC1wIPcoPyuPGIR5EUdJhrgp6vfa8lfqoL/2PKLe0ZqzwEjwtpWz7clauUfujQT2z98KLVEFQdsYi8oA0Ynt0wL1YJgFlunCQ/oyBvXMyObsFO5iwiDgXe6uGsJevXEmwzmyJ9/kikLuEmY0hbG4ZSOBuOjmaEIejBqNXAVjHbtEYLI3nu+e0nGVglH2ftwrl3/Kv0Raxk0APjJlqzKS2dpYwyk+VQjl8=
