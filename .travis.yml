@@ -2,7 +2,7 @@ language: ruby
 cache: bundler
 
 rvm:
-- 2.5
+- 2.4.1
 
 script:
   - gem build cassandra-web.gemspec
