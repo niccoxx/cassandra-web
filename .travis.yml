@@ -12,9 +12,9 @@ install:
 
 script:
   - gem build cassandra-web.gemspec
-  - docker build . --no-cache -t cassandra-web
+  - docker build . --no-cache -t latest
   - docker login --username $DOCKER_HUB_USERNAME --password $DOCKER_HUB_PASSWORD
-  - docker push cassandra-web
+  - docker push nickworlds/cassandra-web:latest
 
 env:
   global:
