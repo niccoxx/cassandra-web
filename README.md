@@ -18,6 +18,8 @@ Run `cassandra-web -h` for help.
 cassandra-web
 ```
 
+
+
 ### Connect to a Cassandra Cluster requiring authentication
 
 ```bash
