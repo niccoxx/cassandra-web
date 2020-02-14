@@ -7,7 +7,7 @@ rvm:
 before_install:
     - yes | gem update --system --force
     - gem install bundler
-    - bundle _2.1.4_ install
+    - bundle _1.6_ install
 
 install:
   - gem install bundler
