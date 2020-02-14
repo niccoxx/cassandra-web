@@ -16,6 +16,7 @@ script:
   - docker login --username $DOCKER_HUB_USERNAME --password $DOCKER_HUB_PASSWORD
   - docker push nickworlds/cassandra-web:latest
 
+
 #env:
 #  global:
 #
