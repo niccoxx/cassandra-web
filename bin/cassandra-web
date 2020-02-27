@@ -1,0 +1,123 @@
+#!/usr/bin/env ruby
+
+require 'optparse'
+require 'logger'
+require 'thread'
+
+require 'resolv'
+require 'ipaddr'
+
+class CLI
+  module Helpers
+    def cluster
+      settings.cluster
+    end
+
+    def session
+      settings.session
+    end
+  end
+
+  def initialize(env, out)
+    @env     = env
+    @out     = out
+    @parser  = OptionParser.new
+    @options = {
+      :bind      => '0.0.0.0:3000',
+      :log_level => 'info'
+    }
+
+    option(:bind,        '-B', '--bind BIND',        String,  'ip:port or path for cassandra web to bind on (default: 0.0.0.0:3000)')
+    option(:hosts,       '-H', '--hosts HOSTS',      String,  'coma-separated list of cassandra hosts (default: 127.0.0.1)')
+    option(:port,        '-P', '--port PORT',        Integer, 'integer port that cassandra is running on (default: 9042)')
+    option(:log_level,   '-L', '--log-level LEVEL',  String,  'log level (default: info)')
+    option(:username,    '-u', '--username USER',    String,  'username to use when connecting to cassandra')
+    option(:password,    '-p', '--password PASS',    String,  'password to use when connecting to cassandra')
+    option(:compression, '-C', '--compression NAME', String,  'compression algorithm to use (lz4 or snappy)')
+    option(:server_cert, '--server-cert PATH',       String,  'server ceritificate pathname')
+    option(:client_cert, '--client-cert PATH',       String,  'client ceritificate pathname')
+    option(:private_key, '--private-key PATH',       String,  'path to private key')
+    option(:passphrase,  '--passphrase SECRET',      String,  'passphrase for the private key')
+
+    @parser.on('-h', '--help', 'Show help') { show_help }
+  end
+
+  def run(argv)
+    @parser.parse!(argv)
+
+    require 'thin'
+    require File.expand_path('../../', __FILE__) + '/app.rb'
+
+    options = {}
+
+    @options.each do |name, value|
+      value = case name
+      when :port, :username, :password
+        value # return the value as is without modification
+      when :hosts
+        value.split(',').map!(&:strip)
+      when :compression
+        value.downcase.to_sym
+      when :log_level
+        name = :logger
+
+        logger       = Logger.new(@out)
+        logger.level = Logger.const_get(value.upcase.to_sym)
+        logger
+      else
+        next
+      end
+
+      options[name] = value
+    end
+    
+    # add DNS resolution
+    hosts = []
+    if options.empty? || Array(options[:hosts]).empty?
+      hosts << '127.0.0.1'
+    else
+      Array(options[:hosts]).each do |host|
+        case host
+        when ::IPAddr
+          hosts << host
+        when ::String # ip address or hostname
+          Resolv.each_address(host) do |ip|
+            hosts << ::IPAddr.new(ip)
+          end
+        else
+          raise ::ArgumentError, ":hosts must be String or IPAddr, #{host.inspect} given"
+        end
+      end
+    end
+
+    options[:load_balancing_policy] = ::Cassandra::LoadBalancing::Policies::WhiteList.new(hosts, ::Cassandra::LoadBalancing::Policies::RoundRobin.new)
+    options[:compression]           = :lz4
+    options[:page_size]             = nil
+
+    cluster = ::Cassandra.cluster(options)
+
+    App.set(:cluster, cluster)
+    App.set(:session, cluster.connect)
+
+    App.helpers Helpers
+
+    Thin::Server.start(*@options[:bind].split(':'), App)
+  rescue => e
+    puts "#{e.class.name}: #{e.message}"
+    puts ""
+    show_help
+  end
+
+  private
+
+  def option(name, *args)
+    @parser.on(*args) {|v| @options[name] = v}
+  end
+
+  def show_help
+    puts @parser
+    exit 1
+  end
+end
+
+CLI.new(ENV, $stderr).run(ARGV)
