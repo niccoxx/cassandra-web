@@ -24,7 +24,7 @@ class App < Sinatra::Base
   end
 
   use Rack::Auth::Basic, "Protected Area" do |username, password|
-    username == 'admin' && password == 'facility'
+    username == 'admin' && password == 'password'
 end
 
   use Rack::Cors do
