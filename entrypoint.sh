@@ -29,7 +29,14 @@ else
   CASSANDRA_PASSOWRD="${CASSANDRA_PASSOWRD}"
 fi
 
-COMMAND="cassandra-web --hosts $CASSANDRA_HOST_IP --port $CASSANDRA_PORT --username $CASSANDRA_USERNAME --password $CASSANDRA_PASSOWRD"
+#LOG
+if [[ ! -v CASSANDRA_LOG ]]; then
+  CASSANDRA_LOG="debug"
+else
+  CASSANDRA_LOG="${CASSANDRA_LOG}"
+fi
+
+COMMAND="cassandra-web --hosts $CASSANDRA_HOST_IP --port $CASSANDRA_PORT --username $CASSANDRA_USERNAME --password $CASSANDRA_PASSOWRD --log-level $CASSANDRA_LOG"
 
 echo $COMMAND 
 
