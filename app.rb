@@ -104,3 +104,4 @@ require 'app/helpers/sse'
 App.helpers  App::Helpers::Async
 App.helpers  App::Helpers::JSON
 App.helpers  App::Helpers::SSE
+
