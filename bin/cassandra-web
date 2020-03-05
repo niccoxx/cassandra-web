@@ -23,7 +23,7 @@ class CLI
     @out     = out
     @parser  = OptionParser.new
     @options = {
-      :bind      => '0.0.0.0:3000',
+      :bind      => '0.0.0.0:8080',
       :log_level => 'info'
     }
 
