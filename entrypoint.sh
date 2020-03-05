@@ -10,7 +10,7 @@ fi
 
 #PORT
 if [[ ! -v CASSANDRA_PORT ]]; then
-  CASSANDRA_PORT="80"
+  CASSANDRA_PORT="9042"
 else
   CASSANDRA_PORT="${CASSANDRA_PORT}"
 fi
