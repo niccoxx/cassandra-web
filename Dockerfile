@@ -12,6 +12,6 @@ RUN \
   chmod a+x /entrypoint.sh && \
   rm -f cassandra-web-*.gem
 
-EXPOSE 3000
+EXPOSE 8080
 
 ENTRYPOINT ["/entrypoint.sh"]
