@@ -2,6 +2,9 @@
 
 A web interface to Apache Cassandra with AngularJS and server-sent events.
 
+> This is a fork of [avalanche123/cassandra-web](https://github.com/avalanche123/cassandra-web),
+> the original project by Bulat Shakirzyanov.
+
 ## Installation
 
 ```bash
